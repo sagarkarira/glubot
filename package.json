@@ -1,0 +1,15 @@
+{
+  "name": "glubot",
+  "version": "1.0.0",
+  "description": "irc bot for glugnith ",
+  "main": "app.js",
+  "dependencies": {
+    "irc": "^0.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sagarkarira1992@gmail.com",
+  "license": "ISC"
+}

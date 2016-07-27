@@ -1,5 +1,4 @@
 var fs = require('fs');
-var users = require('./users');
 var constants = require('./constants');
 var nicksObj = require('./nicks.json');
 
@@ -18,20 +17,20 @@ var bot = new irc.Client(config.server, config.botName, {
 // Listen for joins
 bot.addListener("join", function(channel, who) {
   var nicksArray = nicksObj.nicks;
-
-  if (~who.indexOf(nicksArray)) {
-    bot.say(channel, who + "...dude...welcome back!");
+  console.log(nicksArray);
+  if (~nicksArray.indexOf(who)) {
+    bot.say(channel, "I missed you " + who + " Welcome back!" );
   }else{
-    bot.say(channel, 'Hi ' + who + 'I think you are new here. ');
+    bot.say(channel, 'Hi ' + who + ' a warm welcome to  ' + channel );
     nicksArray.push(who);
     var metaData = {
       nicks : nicksArray
     }
-    fs.writeFile('./nicks.json', JSON.stringify(metadata,null,4) , function (err) {
+    fs.writeFile('./nicks.json', JSON.stringify(metaData,null,4) , function (err) {
       if (err) {
           console.log(err);
       }
-      console.log("File written");
+      console.log("Added new user " + who + " to file");
     });
   }
 
@@ -43,9 +42,9 @@ bot.addListener('message', function (from, to, message) {
   for (var i in noRespectTerms) {
     var substring = noRespectTerms[i];
     if (~message.indexOf(substring)) {
-      bot.say('#sagark', " Please DON'T use sir or mam to address people. Use nicks instead. ");
+      bot.say(channel, " Please DON'T use sir or mam to address people. Use nicks instead. ");
       setTimeout(function () {
-        bot.say('#sagark', 'Like this - " ' + message.replace(noRespectTerms[i], ' ' ) +  ' " ' );
+        bot.say(channel, 'Like this - " ' + message.replace(noRespectTerms[i], ' ' ) +  ' " ' );
       }, 1000)
       console.log('Please don\'t use sir or ma\'am here. ');
     }

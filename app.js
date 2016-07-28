@@ -5,7 +5,7 @@ var nicksObj = require('./nicks.json');
 var config = {
     channels: ['#sagark'],
     server: "irc.freenode.net",
-	   botName: "marty"
+	   botName: "puppy"
 };
 
 var irc = require('irc');
@@ -14,26 +14,28 @@ var bot = new irc.Client(config.server, config.botName, {
 	channels: config.channels
 });
 
-// Listen for joins
+//Check for user joins to channel
 bot.addListener("join", function(channel, who) {
-  var nicksArray = nicksObj.nicks;
-  console.log(nicksArray);
-  if (~nicksArray.indexOf(who)) {
-    bot.say(channel, "I missed you " + who + " Welcome back!" );
+  if (who == config.botName) {
+    bot.say(channel, "Hey everybody " + who + "bot is here. Type !help for commands." )
   }else{
-    bot.say(channel, 'Hi ' + who + ' a warm welcome to  ' + channel );
-    nicksArray.push(who);
-    var metaData = {
-      nicks : nicksArray
-    }
-    fs.writeFile('./nicks.json', JSON.stringify(metaData,null,4) , function (err) {
-      if (err) {
-          console.log(err);
+    var nicksArray = nicksObj.nicks;
+    if (~nicksArray.indexOf(who)) {
+      bot.say(who, "I missed you. " + who + " Welcome back!" );
+    }else{
+      bot.say(channel, 'Hi ' + who + ' a warm welcome to  ' + channel );
+      nicksArray.push(who);
+      var metaData = {
+        nicks : nicksArray
       }
-      console.log("Added new user " + who + " to file");
-    });
+      fs.writeFile('./nicks.json', JSON.stringify(metaData,null,4) , function (err) {
+        if (err) {
+            console.log(err);
+        }
+        console.log("Added new user " + who + " to file");
+      });
+    }
   }
-
 });
 
 
@@ -42,11 +44,11 @@ bot.addListener('message', function (from, to, message) {
   for (var i in noRespectTerms) {
     var substring = noRespectTerms[i];
     if (~message.indexOf(substring)) {
-      bot.say(channel, " Please DON'T use sir or mam to address people. Use nicks instead. ");
+      bot.say(to, "Hey "  +  from  +" please don't use " + noRespectTerms[i] + " to address people. Use nicks instead. ");
       setTimeout(function () {
-        bot.say(channel, 'Like this - " ' + message.replace(noRespectTerms[i], ' ' ) +  ' " ' );
+        bot.say(to, 'Message: " ' + message.replace(noRespectTerms[i], " " ) +  ' " ' );
       }, 1000)
-      console.log('Please don\'t use sir or ma\'am here. ');
+      console.log("Respect Terms used by " + from);
     }
   }
   //console.log(from + ' => ' + to + ': ' + message);

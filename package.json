@@ -4,7 +4,8 @@
   "description": "irc bot for glugnith ",
   "main": "app.js",
   "dependencies": {
-    "irc": "^0.5.0"
+    "irc": "^0.5.0",
+    "request": "^2.74.0"
   },
   "devDependencies": {},
   "scripts": {

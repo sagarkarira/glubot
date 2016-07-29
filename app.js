@@ -1,4 +1,7 @@
 var fs = require('fs');
+var	querystring = require('querystring');
+var irc = require('irc');
+
 var constants = require('./constants');
 var nicksObj = require('./nicks.json');
 var request   = require('request');
@@ -9,7 +12,6 @@ var config = {
     botName: "puppy"
 };
 
-var irc = require('irc');
 
 var bot = new irc.Client(config.server, config.botName, {
 	channels: config.channels
@@ -66,10 +68,76 @@ function commandTasks(to, from, message) {
     case '!help' : return getHelp(to, from, msgSplit);
     case '!ping' : return pingPong(to, from, msgSplit);
     case '!bark' : return bark(to, from, msgSplit);
+    case '!wp' 	 : return getWiki(to, from, msgSplit);
     default : bot.say(to, 'It seems like that you type the wrong commnad.' + 
                           'Please type !help ');
                     break;
   }
+}
+
+
+function getWiki(to, from, msgSplit){
+	var args = msgSplit;
+	if (!args[1]) {
+			bot.say(to, 'Missing arguments. Usage example: !wp NodeJS');
+		} else {
+			args.shift();                                           // removes first arg and moves others by -1
+			args = args.join(' ');                                  // adds ' ' between every element of array and saves as string
+			var titleSecondTry = args;                              // save a copy for later use - if string has to be capitalized: martin scorsese -> Martin Scorsese
+			var title = querystring.stringify({ titles: args });    // add titles= before string
+			var wiki = 'https://en.wikipedia.org/w/api.php?continue=&action=query&' + title + '&indexpageids=&prop=extracts&exintro=&explaintext=&format=json';
+
+			request(wiki, function (error, response, body) {
+				if (!error && response.statusCode === 200) {
+					var wikiSummary = JSON.parse(body);
+					var pageId = wikiSummary.query.pageids[0];      // get pageID
+
+					// if pageId is -1 then the article does not exist
+					if (pageId === '-1') {
+
+						// Try again with changing first letter of every word to upper case
+						titleSecondTry = titleSecondTry.replace(/[^\s]+/g, function (word) {
+							return word.replace(/^./, function (first) {
+								return first.toUpperCase();
+							});
+						});
+
+						titleSecondTry = querystring.stringify({ titles: titleSecondTry });
+
+						wiki = 'https://en.wikipedia.org/w/api.php?continue=&action=query&' + titleSecondTry + '&indexpageids=&prop=extracts&exintro=&explaintext=&format=json';
+						request(wiki, function (err, res, bod) {
+							if (!err && res.statusCode === 200) {
+								wikiSummary = JSON.parse(bod);
+								pageId = wikiSummary.query.pageids[0];
+								if (pageId === '-1') {
+									bot.say(to, 'Article does not exist or could not be found. Sorry :C');
+								} else {
+									wikiSummary = wikiSummary.query.pages[pageId].extract;
+									wikiSummary = wikiSummary.slice(0, 280);
+									var checkRedirect = wikiSummary.slice(0, 70);
+									if (checkRedirect === 'This is a redirect from a title with another method of capitalisation.') {
+										bot.say(to, 'Article is redirecting, please use the following link: https://en.wikipedia.org/wiki/' + titleSecondTry.slice(7));
+									} else {
+										wikiSummary = wikiSummary.concat('... Read more: ' + 'https://en.wikipedia.org/wiki/' + titleSecondTry.slice(7));
+										bot.say(to, wikiSummary);
+									}
+								}
+							}
+						});
+					} else {
+						wikiSummary = wikiSummary.query.pages[pageId].extract;
+						wikiSummary = wikiSummary.slice(0, 280);
+						var checkRedirect = wikiSummary.slice(0, 70);
+						if (checkRedirect === 'This is a redirect from a title with another method of capitalisation.') {
+							bot.say(to, 'Article is redirecting, please use the following link: https://en.wikipedia.org/wiki/' + title.slice(7));
+						} else {
+							wikiSummary = wikiSummary.concat('... Read more: ' + 'https://en.wikipedia.org/wiki/' + title.slice(7));
+							bot.say(to, wikiSummary);
+						}
+					}
+				}
+			});
+		}
 }
 
 function bark(to,from,msgSplit) {
@@ -100,7 +168,7 @@ function getHelp(to, from, msgSplit) {
   bot.say(to, 'Commands: \n'+ 
               '!quote : I will tell you a random quote. \n'+ 
               '!bark : I will bark \n'+ 
-              '!wiki <topic> : I will tell you a random quote. \n'+ 
+              '!wp <topic> : I will tell you a random quote. \n'+ 
               '!weather <city> : I will tell you a random quote. \n'+ 
               '!help - List all commands.');
 }

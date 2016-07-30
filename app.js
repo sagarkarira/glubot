@@ -1,6 +1,7 @@
 var fs = require('fs');
 var querystring = require('querystring');
 var irc = require('irc');
+var c = require('irc-colors');
 
 var constants = require('./constants');
 var nicksObj = require('./nicks.json');
@@ -20,11 +21,11 @@ var bot = new irc.Client(config.server, config.botName, {
 //Check for user joins to channel
 bot.addListener("join", function(channel, who) {
     if (who == config.botName + '1') {
-        bot.say(channel, "Hey everybody " + who + " bot is here. Type !help for commands.")
+        bot.say(channel, "Hey everybody " + c.red(who) + " bot is here. Type" + c.green(' !help ') + "for commands.")
     } else {
         var nicksArray = nicksObj.nicks;
         if (~nicksArray.indexOf(who)) {
-            bot.say(channel, "I missed you. " + who + " Welcome back!");
+            bot.say(channel, "I missed you. " + c.red(who) + " Welcome back!");
         } else {
             bot.say(channel, 'Hi ' + who + ' a warm welcome to  ' + channel);
             nicksArray.push(who);
@@ -50,8 +51,8 @@ bot.addListener('message', function(from, to, message) {
     for (var i in noRespectTerms) {
         var substring = noRespectTerms[i];
         if (~message.indexOf(substring)) {
-            bot.say(to, "Hey " + from + " please don't use " + noRespectTerms[i] + " to address people. Use nicks instead. ");
-            bot.say(to, 'Modified: " ' + message.replace(noRespectTerms[i], "") + ' " ');
+            bot.say(to, "Hey " + from + " please don't use " + c.pink(noRespectTerms[i]) + " to address people. Use nicks instead. ");
+            bot.say(to, c.underline.green('Modified:') + ' ' + message.replace(noRespectTerms[i], "") );
             console.log("Respect Terms used by " + from);
         }
     }
@@ -99,7 +100,7 @@ function getDefinition(to, from, msgSplit) {
             if (content.results.length == 0) {
                 bot.say(to, 'Sorry, ' + args[1] + ' was too difficult to find.');
             } else {
-                bot.say(to, 'Definition :');
+                bot.say(to, c.red('Definition :'));
                 for (var i in content.results) {
                     if (content.results[i].senses[0].subsenses) {
                         meaning =   content.results[i].senses[0].subsenses[0].definition;
@@ -108,7 +109,7 @@ function getDefinition(to, from, msgSplit) {
                     }
                     if (meaning) {
                         count++;
-                        bot.say(to, count + '. ' + meaning);
+                        bot.say(to, c.red(count + '. ' ) + meaning);
                     }
                 }
             }
@@ -185,12 +186,11 @@ function getWiki(to, from, msgSplit) {
 }
 
 function bark(to, from, msgSplit) {
-    bot.say(to, 'bhaun-bhaun');
+    bot.say(to, c.cyan('bhaun-bhaun'));
 }
 
 function pingPong(to, from, msgSplit) {
-    bot.say(to, 'pong');
-
+    bot.say(to, c.pink('pong'));
 }
 
 function getQuote(to, from, msgSplit) {
@@ -203,19 +203,19 @@ function getQuote(to, from, msgSplit) {
         var quoteObj = JSON.parse(html);
         var quoteText = quoteObj.quoteText;
         var quoteAuthor = quoteObj.quoteAuthor;
-        bot.say(to, quoteText + '-' + quoteAuthor);
+        bot.say(to, c.cyan(quoteText) + '-' + c.red(quoteAuthor));
     });
 }
 
 function getHelp(to, from, msgSplit) {
 
-    bot.say(to, 'Commands: \n' +
-        '!bark           : I will bark \n' +
-        '!define <word>  : I will find the meaning of the word for you. \n ' +
-        '!help           : I will list all the things I can do) \n' +
-        '!quote          : I will tell you a random quote. \n' +
-        '!ping           : Wanna play ping pong \n' +
-        '!wiki <topic>   : I will get wikipedia topic intro. \n' +
-        '!weather <city> : I will find the temperature of your city. \n';
-        
+    bot.say(to, c.underline.red('Commands:') + '\n'+
+        c.red('!bark           ')  +  ': I will bark \n' +
+        c.red('!define <word>  ')  +  ': I will find the meaning of the word for you. \n' +
+        c.red('!help           ')  +  ': I will list all the things I can do) \n' +
+        c.red('!quote          ')  +  ': I will tell you a random quote. \n' +
+        c.red('!ping           ')  +  ': I will play ping pong with you \n' +
+        c.red('!wiki <topic>   ')  +  ': I will get wikipedia topic intro. \n' +
+        c.red('!weather <city> ')  +  ': I will find the temperature of your city. \n');
+
 }

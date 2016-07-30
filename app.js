@@ -34,9 +34,9 @@ bot.addListener("join", function(channel, who) {
             }
             fs.writeFile('./nicks.json', JSON.stringify(metaData, null, 4), function(err) {
                 if (err) {
-                    console.log(err);
+                    logging.log(err);
                 }
-                console.log("Added new user " + who + " to file");
+                logging.info("Added new user " + who + " to file");
             });
         }
     }
@@ -47,19 +47,19 @@ bot.addListener('message', function(from, to, message) {
     if (message[0] === '!') {
         return commandTasks(to, from, message);
     }
-    var noRespectTerms = ['sir', 'Sir', 'maam', 'Maam', 'mam', 'Mam', 'Ma\'am']
+    var noRespectTerms = constants.terms.RESPECT;
     for (var i in noRespectTerms) {
         var substring = noRespectTerms[i];
         if (~message.indexOf(substring)) {
             bot.say(to, "Hey " + from + " please don't use " + c.pink(noRespectTerms[i]) + " to address people. Use nicks instead. ");
             bot.say(to, c.underline.green('Modified:') + ' ' + message.replace(noRespectTerms[i], "") );
-            console.log("Respect Terms used by " + from);
+            logging.log("Respect Terms used by " + from);
         }
     }
     //console.log(from + ' => ' + to + ': ' + message);
 });
 
-
+//switch case to control all commands
 function commandTasks(to, from, message) {
 
     var msgSplit = message.split(' ');
@@ -77,6 +77,8 @@ function commandTasks(to, from, message) {
             return getWiki(to, from, msgSplit);
         case '!define':
             return getDefinition(to, from, msgSplit);
+        case '!weather':
+            return getWeather(to, from, msgSplit);
         default:
             bot.say(to, 'It seems like that you type the wrong commnad.' +
                 'Please type !help ');
@@ -84,6 +86,55 @@ function commandTasks(to, from, message) {
     }
 }
 
+//code copied from someone else repo. API key is mine. link -
+function getWeather(to, from, msgSplit) {
+    var args = msgSplit;
+    if (!args[1]) {
+        bot.say(to, 'Missing arguments. Usage example: !weather Moscow');
+    } else {
+        var currentWeather = constants.weather.URL;
+        var metric = constants.weather.METRIC;
+        var apiKey = constants.weather.API_KEY;
+        var userInput;
+        args.shift();
+
+        // check if user wants to search by ZIP code or by city name
+        if (args[0] === 'zip') {
+            userInput = 'zip=' + args[1];
+        } else {
+            args = args.join('');
+            userInput = 'q=' + args;
+        }
+        userInput += metric + apiKey;
+        var openweatherLink = currentWeather + userInput;
+
+        request(openweatherLink, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                var openweatherJson = JSON.parse(body);
+                if (openweatherJson.cod === '404') {
+                    logging.error('error while trying to get weather, "cod" code: ', openweatherJson.cod);
+                    bot.say(to, 'Sorry, no weather info for that one.');
+                } else if (openweatherJson.cod === 200) {
+                    // sunrise & sunset are currently not in use, uncomment if you want to use:
+                    // var sunrise = new Date(openweatherJson.sys.sunrise * 1000);
+                    // var sunset = new Date(openweatherJson.sys.sunset * 1000);
+
+                    var openweatherSummary = 'The current temperature in ' + openweatherJson.name +
+                                            ', ' + openweatherJson.sys.country + ' is: ' + openweatherJson.main.temp.toFixed(1) +
+                                            ' C, ' + openweatherJson.weather[0].description + '. Pressure: ' + openweatherJson.main.pressure +
+                                            ' hpa. Wind speed: ' + openweatherJson.wind.speed + ' m/s (' + (openweatherJson.wind.speed * 3.6).toFixed(2) + ' km/h).';
+
+                    bot.say(to, openweatherSummary);
+                } else {
+                    logging.error('error while trying to get weather for: ', openweatherLink);
+                    bot.say(to, 'Sorry, no weather info for that one.');
+                }
+            }
+        });
+    }
+}
+
+//gets meaning of word
 function getDefinition(to, from, msgSplit) {
     var args = msgSplit;
     if (!args[1]) {
@@ -117,6 +168,7 @@ function getDefinition(to, from, msgSplit) {
     }
 }
 
+//someone else code - need to change a lot. not working great
 function getWiki(to, from, msgSplit) {
     var args = msgSplit;
     if (!args[1]) {
@@ -185,19 +237,22 @@ function getWiki(to, from, msgSplit) {
     }
 }
 
+//simple bark by puppy to scare away trespassers
 function bark(to, from, msgSplit) {
     bot.say(to, c.cyan('bhaun-bhaun'));
 }
 
+//just because it is always there
 function pingPong(to, from, msgSplit) {
     bot.say(to, c.pink('pong'));
 }
 
+//get random quote
 function getQuote(to, from, msgSplit) {
-    var url = "http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json"
+    var url = constants.quote.URL;
     request(url, function(error, response, html) {
         if (error) {
-            console.log(error);
+            logging.log(error);
             bot.say(to, 'Sorry could not fetch quote at this time');
         }
         var quoteObj = JSON.parse(html);
@@ -207,6 +262,7 @@ function getQuote(to, from, msgSplit) {
     });
 }
 
+//all command manual
 function getHelp(to, from, msgSplit) {
 
     bot.say(to, c.underline.red('Commands:') + '\n'+
@@ -215,7 +271,6 @@ function getHelp(to, from, msgSplit) {
         c.red('!help           ')  +  ': I will list all the things I can do) \n' +
         c.red('!quote          ')  +  ': I will tell you a random quote. \n' +
         c.red('!ping           ')  +  ': I will play ping pong with you \n' +
-        c.red('!wiki <topic>   ')  +  ': I will get wikipedia topic intro. \n' +
+        c.red('!wp <topic>     ')  +  ': I will get wikipedia topic intro. \n' +
         c.red('!weather <city> ')  +  ': I will find the temperature of your city. \n');
-
 }

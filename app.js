@@ -3,6 +3,7 @@ var querystring = require('querystring');
 var irc = require('irc');
 var c = require('irc-colors');
 
+var logging = require('./config/logger');
 var constants = require('./constants');
 var nicksObj = require('./nicks.json');
 var request = require('request');
@@ -44,6 +45,7 @@ bot.addListener("join", function(channel, who) {
 
 
 bot.addListener('message', function(from, to, message) {
+    logging.info({'from' : from , 'to': to, 'message':message});
     if (message[0] === '!') {
         return commandTasks(to, from, message);
     }
@@ -53,7 +55,7 @@ bot.addListener('message', function(from, to, message) {
         if (~message.indexOf(substring)) {
             bot.say(to, "Hey " + from + " please don't use " + c.pink(noRespectTerms[i]) + " to address people. Use nicks instead. ");
             bot.say(to, c.underline.green('Modified:') + ' ' + message.replace(noRespectTerms[i], "") );
-            logging.log("Respect Terms used by " + from);
+            logging.info("Respect Terms used by " + from);
         }
     }
     //console.log(from + ' => ' + to + ': ' + message);
@@ -274,3 +276,7 @@ function getHelp(to, from, msgSplit) {
         c.red('!wp <topic>     ')  +  ': I will get wikipedia topic intro. \n' +
         c.red('!weather <city> ')  +  ': I will find the temperature of your city. \n');
 }
+
+bot.addListener('error', function(message) {
+   logging.error('Bot error ' +message);
+ });

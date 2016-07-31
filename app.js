@@ -2,61 +2,42 @@ var fs = require('fs');
 var querystring = require('querystring');
 var irc = require('irc');
 var c = require('irc-colors');
+var request = require('request');
 
+var utils   = require('./utils');
 var logging = require('./config/logger');
 var constants = require('./constants');
 var nicksObj = require('./nicks.json');
-var request = require('request');
-
-var config = {
-    channels: ['#sagark'],
-    server: "irc.freenode.net",
-    botName: "puppy"
-};
-
+var config = require('./config/config');
+var greetings = require('./greetings');
+var observerHandler = require('./modules/observer-handler');
 
 var bot = new irc.Client(config.server, config.botName, {
     channels: config.channels
 });
 
+
+bot.addListener('error', function(message) {
+   logging.error('Bot error ' +message);
+ });
+
+
 //Check for user joins to channel
 bot.addListener("join", function(channel, who) {
-    if (who == config.botName + '1') {
-        bot.say(channel, "Hey everybody " + c.red(who) + " bot is here. Type" + c.green(' !help ') + "for commands.")
-    } else {
-        var nicksArray = nicksObj.nicks;
-        if (~nicksArray.indexOf(who)) {
-            bot.say(channel, "I missed you. " + c.red(who) + " Welcome back!");
-        } else {
-            bot.say(channel, 'Hi ' + who + ' a warm welcome to  ' + channel);
-            nicksArray.push(who);
-            var metaData = {
-                nicks: nicksArray
-            }
-            fs.writeFile('./nicks.json', JSON.stringify(metaData, null, 4), function(err) {
-                if (err) {
-                    logging.log(err);
-                }
-                logging.info("Added new user " + who + " to file");
-            });
-        }
-    }
+    greetings(bot, channel, who);
 });
 
 
 bot.addListener('message', function(from, to, message) {
+    
+    // var sendTo = from; // send privately
+    // if (utils.isChannel(to)) {
+    //   sendTo = to; // send publicly
+    // }
+    observerHandler(bot, from, to, message);
     logging.info({'from' : from , 'to': to, 'message':message});
     if (message[0] === '!') {
         return commandTasks(to, from, message);
-    }
-    var noRespectTerms = constants.terms.RESPECT;
-    for (var i in noRespectTerms) {
-        var substring = noRespectTerms[i];
-        if (~message.indexOf(substring)) {
-            bot.say(to, "Hey " + from + " please don't use " + c.pink(noRespectTerms[i]) + " to address people. Use nicks instead. ");
-            bot.say(to, c.underline.green('Modified:') + ' ' + message.replace(noRespectTerms[i], "") );
-            logging.info("Respect Terms used by " + from);
-        }
     }
     //console.log(from + ' => ' + to + ': ' + message);
 });
@@ -277,6 +258,3 @@ function getHelp(to, from, msgSplit) {
         c.red('!weather <city> ')  +  ': I will find the temperature of your city. \n');
 }
 
-bot.addListener('error', function(message) {
-   logging.error('Bot error ' +message);
- });

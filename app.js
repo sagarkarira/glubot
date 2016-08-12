@@ -11,6 +11,7 @@ var nicksObj = require('./nicks.json');
 var config = require('./config/config');
 var greetings = require('./greetings');
 var observerHandler = require('./modules/observer-handler');
+var commandHandler  = require('./modules/command-handler');
 
 var bot = new irc.Client(config.server, config.botName, {
     channels: config.channels
@@ -29,24 +30,23 @@ bot.addListener("join", function(channel, who) {
 
 
 bot.addListener('message', function(from, to, message) {
-    
+    logging.info({'from' : from , 'to': to, 'message':message});
+    observerHandler(bot, from, to, message);
+    commandHandler(bot, from , to , message);
     // var sendTo = from; // send privately
     // if (utils.isChannel(to)) {
     //   sendTo = to; // send publicly
     // }
-    observerHandler(bot, from, to, message);
-    logging.info({'from' : from , 'to': to, 'message':message});
-    if (message[0] === '!') {
-        return commandTasks(to, from, message);
-    }
+    // if (message[0] === '!') {
+    //     return commandTasks(to, from, message);
+    // }
     //console.log(from + ' => ' + to + ': ' + message);
 });
 
 //switch case to control all commands
 function commandTasks(to, from, message) {
 
-    var msgSplit = message.split(' ');
-    var command = msgSplit[0];
+
     switch (command) {
         case '!quote':
             return getQuote(to, from, msgSplit);
@@ -257,4 +257,3 @@ function getHelp(to, from, msgSplit) {
         c.red('!wp <topic>     ')  +  ': I will get wikipedia topic intro. \n' +
         c.red('!weather <city> ')  +  ': I will find the temperature of your city. \n');
 }
-

@@ -4,6 +4,7 @@ var constants = require('../constants');
 var utils = require('../utils');
 var logging = require('../config/logger');
 
-module.exports = function bark(bot, from, to, msgSplit) {
-     return c.cyan('bhaun-bhaun');
+//simple bark by puppy to scare away trespassers
+module.exports = function bark(bot, from, to, msgSplit, callback) {
+     callback (c.cyan('bhaun-bhaun'));
 }

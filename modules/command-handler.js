@@ -21,11 +21,13 @@ module.exports = function(bot, from, to, message) {
         }
         externalCommand(command);
         function externalCommand(command) {
-            if (fs.existsSync('./commands/' + command + '.js')) { // check if we have an command file
-                var output = require('../commands/' + command + '.js')(bot, from, to, msgSplit);
-                if (output) {
-                    bot.say(sendTo, output);
-                }
+            if (fs.existsSync('./commands/' + command + '.js')) { // check if we have a command file
+                require('../commands/' + command + '.js')(bot, from, to, msgSplit, function(output){
+                    if (output) {
+                        bot.say(sendTo, output);
+                    }
+                });
+              
             } else {
                 bot.say(to, 'It seems like that you type the wrong command.' +
                     'Please type !help ');

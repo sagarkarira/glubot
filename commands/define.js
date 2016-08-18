@@ -24,19 +24,19 @@ module.exports = function getDefinition(bot, from, to, msgSplit, callback) {
             if (content.results.length == 0) {
                 return callback( 'Sorry, ' + args[1] + ' was too difficult to find.');
             } else {
-            	reply += c.red('Definition :');
+            	reply += c.red('Definition : \n');
                 for (var i in content.results) {
                     if (content.results[i].senses[0].subsenses) {
-                        meaning =   content.results[i].senses[0].subsenses[0].definition;
+                        meaning =   content.results[i].senses[0].subsenses[0].definition + '\n';
                     } else {
-                        meaning =   content.results[i].senses[0].definition;
+                        meaning =   content.results[i].senses[0].definition + '\n';
                     }
                     if (meaning) {
                         count++;
                         reply +=  c.red(count + '. ' ) + meaning;
-                        callback(reply);
                     }
                 }
+                callback(reply);
             }
         });
     }

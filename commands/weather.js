@@ -8,7 +8,7 @@ var logging = require('../config/logger');
 
 //code copied from someone else repo. API key is mine. link -
 
-module.exports = function getWeather(bot, from, to, msgSplit) {
+module.exports = function getWeather(bot, from, to, msgSplit, callback) {
     var args = msgSplit;
     if (!args[1]) {
         return callback('Missing arguments. Usage example: !weather Moscow');

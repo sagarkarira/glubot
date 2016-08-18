@@ -17,6 +17,6 @@ module.exports = function getQuote(bot, from, to, msgSplit, callback) {
         var quoteObj = JSON.parse(html);
         var quoteText = quoteObj.quoteText;
         var quoteAuthor = quoteObj.quoteAuthor;
-        return callback (c.cyan(quoteText) + '-' + c.red(quoteAuthor));
+        callback (c.cyan(quoteText) + '-' + c.red(quoteAuthor));
     });
 }

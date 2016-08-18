@@ -4,9 +4,11 @@ var request = require('request');
 var constants = require('../constants');
 var utils = require('../utils');
 var logging = require('../config/logger');
+var querystring = require('querystring');
+
 
 //someone else code - need to change a lot. not working great
-module.exports = function getWiki(bot, from, to, msgSplit) {
+module.exports = function getWiki(bot, from, to, msgSplit, callback) {
     var args = msgSplit;
     if (!args[1]) {
         return callback('Missing arguments. Usage example: !wp NodeJS');

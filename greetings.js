@@ -15,7 +15,7 @@ module.exports = function (bot, channel, who) {
     } else {
         var nicksArray = nicksObj.nicks;
         if (~nicksArray.indexOf(who)) {
-            bot.say(channel, "I missed you. " + c.red(who) + " Welcome back!");
+            bot.say(channel, "Welcome back " + c.red(who) );
         } else {
             bot.say(channel, 'Hi ' + who + ' a warm welcome to  ' + channel);
             nicksArray.push(who);

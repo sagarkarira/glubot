@@ -1,5 +1,6 @@
 module.exports = {
     channels: ['#sagark'],
     server: "irc.freenode.net",
-    botName: "puppy"
+    botName: "puppy",
+    admins : ['sagark']
 };

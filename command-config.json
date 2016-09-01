@@ -1,0 +1,51 @@
+{
+	"bark" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"define" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"help" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"ping" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"quote" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"weather" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"wp" : {
+		"enabled"  : 1,
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	},
+	"restart" : {
+		"enabled"  : 1,
+		"admin"	   : 1,
+		"text"		: "",	
+		"desc" : ""
+	} 
+
+}

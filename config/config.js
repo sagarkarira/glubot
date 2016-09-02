@@ -1,5 +1,5 @@
 module.exports = {
-    channels: ['#sagark'],
+    channels: ['#glugnith'],
     server: "irc.freenode.net",
     botName: "puppy",
     admins : ['sagark']

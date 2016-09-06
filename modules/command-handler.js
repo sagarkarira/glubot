@@ -20,7 +20,7 @@ module.exports = function(bot, from, to, message) {
             sendTo = to; // send publicly
         }
 
-        if (!utils.commandExists) {
+        if (!utils.commandExists(command)) {
             bot.say(to, 'It seems like that you type the wrong command.' +
                     'Please type !help ');
             return ;

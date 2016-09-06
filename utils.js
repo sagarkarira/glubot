@@ -22,11 +22,10 @@ function isChannel(string) {
 }
 
 function commandExists(command) {
-	if (cmdcfg.command) {
+	if (command in cmdcfg) {
 		return true;
 	}
 	return false;
-
 }
 
 function commandEnabled(command) {

@@ -41,11 +41,17 @@
 		"text"		: "",	
 		"desc" : ""
 	},
+	"score" : {
+		"enabled"  : 1,
+		"admin"    : 0,
+		"text"		: "",
+		"desc" : ""
+	},
 	"restart" : {
 		"enabled"  : 1,
 		"admin"	   : 1,
 		"text"		: "",	
 		"desc" : ""
 	} 
-
 }
+

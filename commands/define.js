@@ -24,19 +24,18 @@ module.exports = function getDefinition(bot, from, to, msgSplit, callback) {
             if (content.results.length == 0) {
                 return callback( 'Sorry, ' + args[1] + ' was too difficult to find.');
             } else {
-            	reply += c.red('Definition : \n');
+                var unique = new Set([]);
+                reply += c.red('Definitions: \n');
                 for (var i in content.results) {
-                    if (content.results[i].senses[0].subsenses) {
-                        meaning =   content.results[i].senses[0].subsenses[0].definition + '\n';
-                    } else {
-                        meaning =   content.results[i].senses[0].definition + '\n';
-                    }
-                    if (meaning) {
-                        count++;
-                        reply +=  c.red(count + '. ' ) + meaning;
+                    meaning = content.results[i].senses[0].definition;
+                    if (meaning && typeof meaning === "string" && meaning != 'undefined') {
+                        unique.add(meaning);
                     }
                 }
-                callback(reply);
+                for (let meaning of unique) {
+                    reply += "* " + meaning + "\n";
+                }
+                return callback(reply);
             }
         });
     }

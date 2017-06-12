@@ -52,6 +52,12 @@
 		"admin"	   : 1,
 		"text"		: "",	
 		"desc" : ""
-	} 
+	},
+	"contribute" : {
+		"enabled"  : 1, 
+		"admin"    : 0,
+		"text"		: "",	
+		"desc" : ""
+	}
 }
 

@@ -15,5 +15,6 @@ module.exports= function getHelp(bot, from, to, msgSplit, callback) {
         c.red('!ping           ')  +  ': I will play ping pong with you \n' +
         c.red('!wp <topic>     ')  +  ': I will get wikipedia topic intro. \n' +
         c.red('!weather <city> ')  +  ': I will find the temperature of your city. \n' +
-        c.red('!score          ')  +  ': I will fetch latest cricket scores. \n');
+        c.red('!score          ')  +  ': I will fetch latest cricket scores. \n' +
+        c.red('!contribute     ')  +  ': I will guide you how to teach me new commands.\n');
 }

@@ -40,10 +40,14 @@ module.exports = function getWeather(bot, from, to, msgSplit, callback) {
                     // var sunrise = new Date(openweatherJson.sys.sunrise * 1000);
                     // var sunset = new Date(openweatherJson.sys.sunset * 1000);
 
-                    var openweatherSummary = 'The current temperature in ' + openweatherJson.name +
-                                            ', ' + openweatherJson.sys.country + ' is: ' + openweatherJson.main.temp.toFixed(1) +
-                                            ' C, ' + openweatherJson.weather[0].description + '. Pressure: ' + openweatherJson.main.pressure +
-                                            ' hpa. Wind speed: ' + openweatherJson.wind.speed + ' m/s (' + (openweatherJson.wind.speed * 3.6).toFixed(2) + ' km/h).';
+                    var openweatherSummary = 'The current temperature in '
+                                            + openweatherJson.name + ', ' + openweatherJson.sys.country
+                                            + ' is: ' + openweatherJson.main.temp.toFixed(1) + ' C, '
+                                            + openweatherJson.weather[0].description
+                                            + '. Humidity: ' + openweatherJson.main.humidity
+                                            + '%. Pressure: ' + openweatherJson.main.pressure
+                                            + ' hpa. Wind speed: ' + openweatherJson.wind.speed + ' m/s ('
+                                            + (openweatherJson.wind.speed * 3.6).toFixed(2) + ' km/h).';
 
                     return callback(openweatherSummary);
                 } else {

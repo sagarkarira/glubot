@@ -1,5 +1,5 @@
 exports.terms = {
-    RESPECT : ['sir', 'Sir', 'maam', 'Maam', 'mam', 'Mam', 'Ma\'am']
+    RESPECT : ['sir', 'maam', 'mam', 'ma\'am']
 }
 
 exports.weather = {

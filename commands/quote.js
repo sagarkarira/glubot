@@ -13,8 +13,8 @@ module.exports = function getQuote(bot, from, to, msgSplit, callback) {
             logging.log(error);
             return callback('Sorry could not fetch quote at this time');
         }
-
-        var quoteObj = JSON.parse(html);
+        var quoteObj = JSON.parse(html.replace("\\\'","\'"));
+        // replacement to avoid problems in parsing JSON with quotes
         var quoteText = quoteObj.quoteText;
         var quoteAuthor = quoteObj.quoteAuthor;
         callback (c.cyan(quoteText) + '-' + c.red(quoteAuthor));

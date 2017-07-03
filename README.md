@@ -31,6 +31,8 @@ See the bot filter result when someone user **Sir** or **Ma\'am** on the irc. Th
   * **!help** - lists all commands
   * **!ping** - standard ping - pong command
   * **!quote** - displays a random quote
+  * **!joke** - displays a joke
+  * **!pupper** - posts a pic of a cute pupper
  
 So all commands goes into the commands folder. And all the observers goes into the observer folder. If you are new to this you can start start contributing by making your own command like a joke command, or fetch some news etc. 
 
@@ -38,7 +40,33 @@ So all commands goes into the commands folder. And all the observers goes into t
 * Clone the project
 * Run `npm install` to download all the packages.
 * Change the irc channel name in the **config.js** file in config folder. 
+* Some scripts like `joke` and `pupper` require python3 and some pythone modules, so install `python3` and run `pip3 install -r requirements.txt`
+* Create a config file for the python scripts by running `cp scripts/config.py.sample scripts/config.py`
+* Register an app on reddit and fill in the fields in `config.py`
 * Run `node app.js`
 
+## License Notice
 
+```
+glubot - irc bot for glugnith channel
+
+Copyright (C) 2017 Sagar Karira
+Copyright (C) 2017 Rahul Raturi
+Copyright (C) 2017 Param Singh
+Copyright (C) 2017 Bimalkant Lauhny
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+```
   

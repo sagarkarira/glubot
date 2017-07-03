@@ -50,8 +50,20 @@
 	"restart" : {
 		"enabled"  : 1,
 		"admin"	   : 1,
-		"text"		: "",	
+		"text"		: "",
 		"desc" : ""
-	} 
+	},
+	"pupper" : {
+		"enabled" : 1,
+		"admin": 0,
+		"text": "",
+		"desc": ""
+	},
+	"joke" : {
+		"enabled" : 1,
+		"admin": 0,
+		"text": "",
+		"desc": ""
+	}
 }
 

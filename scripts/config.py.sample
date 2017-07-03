@@ -1,0 +1,5 @@
+REDDIT_CLIENT_ID = 'fill client id here'
+REDDIT_CLIENT_SECRET = 'fill client secret here'
+REDDIT_USERNAME = 'fill username here'
+REDDIT_PASSWORD = 'fill password here'
+REDDIT_USER_AGENT = 'puppy glugnith bot/0.1 by /u/justavertexinagraph'

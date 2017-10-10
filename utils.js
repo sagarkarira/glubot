@@ -7,13 +7,10 @@ var constants = require('./constants');
 var config = require('./config/config');
 var cmdcfg  = require('./command-config');
 
-exports.isChannel = isChannel;
-exports.commandExists = commandExists;
-exports.adminCommand = adminCommand;
-exports.commandEnabled = commandEnabled;
+
 exports.clearCache 	= clearCache;
 
-function isChannel(string) {
+exports.isChannel =  string => {
 	var channelsArray = config.channels;
 	if (~string.indexOf(channelsArray)) {
 		return true;
@@ -21,21 +18,18 @@ function isChannel(string) {
 	return false; 
 }
 
-function commandExists(command) {
-	if (command in cmdcfg) {
+exports.commandExists =command => {
+	if(command in cmdcfg) {
 		return true;
 	}
 	return false;
 }
 
-function commandEnabled(command) {
-	if (cmdcfg[command].enabled === 1) {
-		return true;
-	}
-	return false;
+exports.commandEnabled = command => {
+	return cmdcfg[command].enabled === 1;
 }
 
-function adminCommand (nick, command) {
+exports.adminCommand = (nick, command) => {
 	if (!cmdcfg[command].admin) {
 		return false;
 	}
@@ -50,7 +44,7 @@ function isAdmin(nick, command) {
 	return true;
 }
 
-function clearCache(callback) {
+exports.clearCache  = callback => {
 	
 	fs.readdirSync('./commands/').forEach(function (file) {
     	delete require.cache[require.resolve('./commands/'+file)];

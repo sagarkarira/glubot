@@ -1,16 +1,16 @@
 var request = require('request');
 var cheerio = require('cheerio');
 
-module.exports = function getCricketScores(bot, from, to, msgSplit, callback) {
+module.exports = (bot, from, to, msgSplit, callback) => {
 	url = 'http://www.cricbuzz.com/';
-	request(url, function(error, response, html) {
+	request(url, (error, response, html) => {
 		if(!error) {
 			var $ = cheerio.load(html);
 			var featured_section = $("div[ng-if*='Featured'] .cb-mtch-blk");
 			var match_reports = [];
 			var separator = ', ';
 			var bullet = '* ';
-			featured_section.each(function() {
+			featured_section.each(() => {
 				var data = $(this).children().first();
 				var status_class = data.children().last().attr('class');
 				if(status_class.indexOf('cb-text-preview') !== -1) {

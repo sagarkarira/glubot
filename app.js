@@ -18,19 +18,19 @@ var bot = new irc.Client(config.server, config.botName, {
 });
 
 
-bot.addListener('error', function(message) {
-   logging.error('Bot error ' +message);
- });
+bot.addListener('error', message => {
+    logging.error('Bot error ' +message);
+});
 
 
 //Check for user joins to channel
-bot.addListener("join", function(channel, who) {
+bot.addListener("join", (channel, who) => {
     logging.info(who + " joined " + channel);
     greetings(bot, channel, who);
 });
 
 
-bot.addListener('message', function(from, to, message) {
+bot.addListener('message', (from, to, message) => {
     logging.info({'from' : from , 'to': to, 'message':message});
     observerHandler(bot, from, to, message);
     commandHandler(bot, from , to , message);

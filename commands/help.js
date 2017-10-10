@@ -5,7 +5,7 @@ var utils = require('../utils');
 var logging = require('../config/logger');
 
 //all command manual
-module.exports= function getHelp(bot, from, to, msgSplit, callback) {
+module.exports= function (bot, from, to, msgSplit, callback) => {
 
     callback( c.underline.red('Commands:') + '\n'+
         c.red('!bark           ')  +  ': I will bark \n' +

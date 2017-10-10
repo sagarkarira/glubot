@@ -7,14 +7,14 @@ var logging = require('../config/logger');
 
 
 //gets meaning of word
-module.exports = function getDefinition(bot, from, to, msgSplit, callback) {
+module.exports = (bot, from, to, msgSplit, callback) => {
     var args = msgSplit;
     var reply = '';
     if (!args[1]) {
         return callback ('Missing arguments. Usage example: !define puppy');
     } else {
         var link = 'http://api.pearson.com/v2/dictionaries/entries?headword=' + args[1];
-        request(link, function(error, response, body) {
+        request(link, (error, response, body) => {
             if (error) {
                 logging.error('Error in fetching definition ' + error);
                 return callback('Error in fetching definition');

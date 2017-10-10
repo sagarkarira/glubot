@@ -8,7 +8,7 @@ var logging = require('../config/logger');
 
 //code copied from someone else repo. API key is mine. link -
 
-module.exports = function getWeather(bot, from, to, msgSplit, callback) {
+module.exports = (bot, from, to, msgSplit, callback)=> {
     var args = msgSplit;
     if (!args[1]) {
         return callback('Missing arguments. Usage example: !weather Moscow');
@@ -29,7 +29,7 @@ module.exports = function getWeather(bot, from, to, msgSplit, callback) {
         userInput += metric + apiKey;
         var openweatherLink = currentWeather + userInput;
 
-        request(openweatherLink, function (error, response, body) {
+        request(openweatherLink,  (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 var openweatherJson = JSON.parse(body);
                 if (openweatherJson.cod === '404') {
@@ -41,13 +41,13 @@ module.exports = function getWeather(bot, from, to, msgSplit, callback) {
                     // var sunset = new Date(openweatherJson.sys.sunset * 1000);
 
                     var openweatherSummary = 'The current temperature in '
-                                            + openweatherJson.name + ', ' + openweatherJson.sys.country
-                                            + ' is: ' + openweatherJson.main.temp.toFixed(1) + ' C, '
-                                            + openweatherJson.weather[0].description
-                                            + '. Humidity: ' + openweatherJson.main.humidity
-                                            + '%. Pressure: ' + openweatherJson.main.pressure
-                                            + ' hpa. Wind speed: ' + openweatherJson.wind.speed + ' m/s ('
-                                            + (openweatherJson.wind.speed * 3.6).toFixed(2) + ' km/h).';
+                        + openweatherJson.name + ', ' + openweatherJson.sys.country
+                        + ' is: ' + openweatherJson.main.temp.toFixed(1) + ' C, '
+                        + openweatherJson.weather[0].description
+                        + '. Humidity: ' + openweatherJson.main.humidity
+                        + '%. Pressure: ' + openweatherJson.main.pressure
+                        + ' hpa. Wind speed: ' + openweatherJson.wind.speed + ' m/s ('
+                        + (openweatherJson.wind.speed * 3.6).toFixed(2) + ' km/h).';
 
                     return callback(openweatherSummary);
                 } else {

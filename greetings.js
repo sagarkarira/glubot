@@ -8,8 +8,8 @@ var constants = require('./constants');
 var nicksObj = require('./nicks.json');
 var config = require('./config/config');
 
-module.exports = function (bot, channel, who) {
-    
+module.exports =  (bot, channel, who) => {
+
     if (who == config.botName + '1') {
         bot.say(channel, "Hey everybody " + c.red(who) + " bot is here. Type" + c.green(' !help ') + "for commands.")
     } else {
@@ -22,7 +22,7 @@ module.exports = function (bot, channel, who) {
             var metaData = {
                 nicks: nicksArray
             }
-            fs.writeFile('./nicks.json', JSON.stringify(metaData, null, 4), function(err) {
+            fs.writeFile('./nicks.json', JSON.stringify(metaData, null, 4), (err) => {
                 if (err) {
                     logging.log(err);
                 }

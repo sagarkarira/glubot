@@ -6,7 +6,7 @@ var utils = require('../utils');
 var logging = require('../config/logger');
 
 //get random quote
-module.exports = function getQuote(bot, from, to, msgSplit, callback) {
+module.exports = (bot, from, to, msgSplit, callback) => {
     var url = constants.quote.URL;
     request(url, function(error, response, html) {
         if (error) {

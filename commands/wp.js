@@ -8,7 +8,7 @@ var querystring = require('querystring');
 
 
 //someone else code - need to change a lot. not working great
-module.exports = function getWiki(bot, from, to, msgSplit, callback) {
+module.exports = (bot, from, to, msgSplit, callback) => {
     var args = msgSplit;
     if (!args[1]) {
         return callback('Missing arguments. Usage example: !wp NodeJS');
@@ -21,7 +21,7 @@ module.exports = function getWiki(bot, from, to, msgSplit, callback) {
         }); // add titles= before string
         var wiki = 'https://en.wikipedia.org/w/api.php?continue=&action=query&' + title + '&indexpageids=&prop=extracts&exintro=&explaintext=&format=json';
 
-        request(wiki, function(error, response, body) {
+        request(wiki, (error, response, body) =>{
             if (!error && response.statusCode === 200) {
                 var wikiSummary = JSON.parse(body);
                 var pageId = wikiSummary.query.pageids[0]; // get pageID
@@ -30,10 +30,8 @@ module.exports = function getWiki(bot, from, to, msgSplit, callback) {
                 if (pageId === '-1') {
 
                     // Try again with changing first letter of every word to upper case
-                    titleSecondTry = titleSecondTry.replace(/[^\s]+/g, function(word) {
-                        return word.replace(/^./, function(first) {
-                            return first.toUpperCase();
-                        });
+                    titleSecondTry = titleSecondTry.replace(/[^\s]+/g, word => {
+                        return word.replace(/^./, first => first.toUpperCase());
                     });
 
                     titleSecondTry = querystring.stringify({
@@ -41,7 +39,7 @@ module.exports = function getWiki(bot, from, to, msgSplit, callback) {
                     });
 
                     wiki = 'https://en.wikipedia.org/w/api.php?continue=&action=query&' + titleSecondTry + '&indexpageids=&prop=extracts&exintro=&explaintext=&format=json';
-                    request(wiki, function(err, res, bod) {
+                    request(wiki, (err, res, bod) => {
                         if (!err && res.statusCode === 200) {
                             wikiSummary = JSON.parse(bod);
                             pageId = wikiSummary.query.pageids[0];

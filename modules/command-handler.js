@@ -8,7 +8,7 @@ var utils   = require('../utils');
 var logging = require('../config/logger');
 
 
-module.exports = function(bot, from, to, message) {
+module.exports = (bot, from, to, message) => {
 
     if (message[0] === '!') {
         var msgSplit = message.split(' ');
@@ -22,22 +22,22 @@ module.exports = function(bot, from, to, message) {
 
         if (!utils.commandExists(command)) {
             bot.say(to, 'It seems like that you type the wrong command.' +
-                    'Please type !help ');
+                'Please type !help ');
             return ;
         }
 
         if (!utils.commandEnabled(command) ) {
             bot.say(sendTo, 'Command not enabled by my master');
             return;
-        } 
+        }
 
         if (utils.adminCommand(nick, command) ) {
             bot.say(sendTo, 'Only my master can use this command');
             return;
-        } 
+        }
 
         if (command === 'restart') {
-            utils.clearCache(function(output) {
+            utils.clearCache( output => {
                 bot.say(sendTo, output);
                 return;
             })
@@ -46,19 +46,19 @@ module.exports = function(bot, from, to, message) {
 
         function executeCommands(command) {
             if (fs.existsSync('./commands/' + command + '.js')) { // check if we have a command file
-                require('../commands/' + command + '.js')(bot, from, to, msgSplit, function(output){
+                require('../commands/' + command + '.js')(bot, from, to, msgSplit, output => {
                     if (output) {
                         bot.say(sendTo, output);
                         return;
                     }
                 });
-              
+
             } else {
                 bot.say(to, 'It seems like that you type the wrong command.' +
                     'Please type !help ');
                 return ;
-            } 
-        }   
+            }
+        }
     }
 }
 
